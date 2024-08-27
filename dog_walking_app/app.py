@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'  # Используйте SQLite для простоты
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -16,7 +16,6 @@ class Order(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
 
-# Оборачиваем вызов db.create_all() в app.app_context()
 with app.app_context():
     db.create_all()
 
@@ -38,7 +37,6 @@ def create_order():
 
     end_time = start_time + timedelta(minutes=30)
 
-    # Проверка на занятость
     existing_orders = Order.query.filter(
         Order.start_time < end_time,
         Order.end_time > start_time
